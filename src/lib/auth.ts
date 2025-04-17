@@ -18,18 +18,38 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.sub!
-        session.user.role = token.role as string
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.picture;
+        session.user.role = token.role;
       }
-      return session
+
+      return session;
     },
     async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role
+      const dbUser = await db.user.findFirst({
+        where: {
+          email: token.email,
+        },
+      });
+
+      if (!dbUser) {
+        if (user) {
+          token.id = user?.id;
+        }
+        return token;
       }
-      return token
+
+      return {
+        id: dbUser.id,
+        name: dbUser.name,
+        email: dbUser.email,
+        picture: dbUser.image,
+        role: dbUser.role,
+      };
     },
   },
 } 
