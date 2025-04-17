@@ -1,5 +1,5 @@
 import { NextAuthOptions } from "next-auth";
-import NextAuth from "next-auth/next";
+import NextAuth from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@prisma/client";
 
