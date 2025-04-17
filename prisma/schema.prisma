@@ -1,24 +1,18 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-<<<<<<< HEAD
-generator client {
-  provider = "prisma-client-js"
-=======
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
->>>>>>> 100369d1eacef8202e256748448d5c057899f65f
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-<<<<<<< HEAD
 
 model Account {
   id                String  @id @default(cuid())
@@ -56,8 +50,7 @@ model User {
   role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
-  tickets       Ticket[]  @relation("CreatedTickets")
-  assigned      Ticket[]  @relation("AssignedTickets")
+  tickets       Ticket[]
   comments      Comment[]
 }
 
@@ -70,50 +63,45 @@ model VerificationToken {
 }
 
 model Ticket {
-  id           String    @id @default(cuid())
-  title        String
-  description  String    @db.Text
-  status       Status    @default(OPEN)
-  priority     Priority  @default(MEDIUM)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  createdById  String
-  assignedToId String?
-  
-  createdBy    User      @relation("CreatedTickets", fields: [createdById], references: [id])
-  assignedTo   User?     @relation("AssignedTickets", fields: [assignedToId], references: [id])
-  comments     Comment[]
+  id          String         @id @default(cuid())
+  title       String
+  description String
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(MEDIUM)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  comments    Comment[]
 }
 
 model Comment {
   id        String   @id @default(cuid())
-  content   String   @db.Text
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  ticketId  String
   userId    String
-
-  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ticketId  String
+  user      User     @relation(fields: [userId], references: [id])
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
 }
 
 enum Role {
   USER
   ADMIN
+  AGENT
 }
 
-enum Status {
+enum TicketStatus {
   OPEN
   IN_PROGRESS
   RESOLVED
   CLOSED
 }
 
-enum Priority {
+enum TicketPriority {
   LOW
   MEDIUM
   HIGH
-  CRITICAL
-} 
-=======
->>>>>>> 100369d1eacef8202e256748448d5c057899f65f
+  URGENT
+}
