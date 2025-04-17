@@ -6,12 +6,7 @@ declare global {
 
 const prisma = global.prisma || new PrismaClient({
   log: ['error'],
-  errorFormat: 'minimal',
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL
-    }
-  }
+  errorFormat: 'minimal'
 })
 
 if (process.env.NODE_ENV !== 'production') {
