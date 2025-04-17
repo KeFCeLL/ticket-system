@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google"
 import { db } from "./db"
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(db),
+  adapter: PrismaAdapter(db) as any,
   session: {
     strategy: "jwt",
   },
