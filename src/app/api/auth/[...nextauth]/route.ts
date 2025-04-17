@@ -1,10 +1,12 @@
 import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 // Prisma client'ı başlat
-db.$connect();
+prisma.$connect();
 
 const handler = NextAuth(authOptions);
 
